@@ -1,3 +1,13 @@
+## 1.0.7
+
+* Add Android 35 (API level 35) compatibility
+* Update Android Gradle Plugin to 8.1.4
+* Update Kotlin to 1.9.10
+* Update Gradle to 8.4
+* Add namespace declarations for modern Android build system
+* Update compileSdkVersion and targetSdkVersion to 35
+* Add flutter_lints as dev dependency for better code quality
+
 ## 1.0.6
 
 * enable links clickable on iOS.

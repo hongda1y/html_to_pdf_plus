@@ -9,31 +9,43 @@
     },
     {
       "name": "collection",
-      "rootUri": "file:///Users/khizarrehman/.pub-cache/hosted/pub.dev/collection-1.18.0",
+      "rootUri": "file:///Users/khizarrehman/.pub-cache/hosted/pub.dev/collection-1.19.0",
       "packageUri": "lib/",
-      "languageVersion": "2.18"
+      "languageVersion": "3.4"
     },
     {
       "name": "flutter",
-      "rootUri": "file:///Users/khizarrehman/Desktop/flutterSdk/flutter/packages/flutter",
+      "rootUri": "file:///Users/khizarrehman/Desktop/flutterSdk/flutter3_27_4/packages/flutter",
       "packageUri": "lib/",
-      "languageVersion": "3.2"
+      "languageVersion": "3.3"
+    },
+    {
+      "name": "flutter_lints",
+      "rootUri": "file:///Users/khizarrehman/.pub-cache/hosted/pub.dev/flutter_lints-3.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.1"
+    },
+    {
+      "name": "lints",
+      "rootUri": "file:///Users/khizarrehman/.pub-cache/hosted/pub.dev/lints-3.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
     },
     {
       "name": "material_color_utilities",
-      "rootUri": "file:///Users/khizarrehman/.pub-cache/hosted/pub.dev/material_color_utilities-0.8.0",
+      "rootUri": "file:///Users/khizarrehman/.pub-cache/hosted/pub.dev/material_color_utilities-0.11.1",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
     {
       "name": "meta",
-      "rootUri": "file:///Users/khizarrehman/.pub-cache/hosted/pub.dev/meta-1.11.0",
+      "rootUri": "file:///Users/khizarrehman/.pub-cache/hosted/pub.dev/meta-1.15.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
     {
       "name": "sky_engine",
-      "rootUri": "file:///Users/khizarrehman/Desktop/flutterSdk/flutter/bin/cache/pkg/sky_engine",
+      "rootUri": "file:///Users/khizarrehman/Desktop/flutterSdk/flutter3_27_4/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
       "languageVersion": "3.2"
     },
@@ -50,7 +62,10 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2024-08-28T19:09:54.997874Z",
+  "generated": "2025-09-08T18:20:46.263769Z",
   "generator": "pub",
-  "generatorVersion": "3.3.1"
+  "generatorVersion": "3.6.2",
+  "flutterRoot": "file:///Users/khizarrehman/Desktop/flutterSdk/flutter3_27_4",
+  "flutterVersion": "3.27.4",
+  "pubCache": "file:///Users/khizarrehman/.pub-cache"
 }
