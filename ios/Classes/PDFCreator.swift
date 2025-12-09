@@ -8,18 +8,18 @@ class PDFCreator {
         - printFormatter: UIPrintFormatter from WebView/HTML
         - width: PDF width in points (A4 default)
         - height: PDF height in points (A4 default)
-        - margin: Margin (inset) added to all pages
+        - verticalMargin: Top and bottom margin (default 20.0 pt)
      - Returns: URL of generated PDF
      */
     class func create(printFormatter: UIPrintFormatter,
                       width: Double = 595.2,   // A4 width @ 72 dpi
                       height: Double = 841.8,  // A4 height @ 72 dpi
-                      margin: Double = 40.0) -> URL {
+                      verticalMargin: Double = 40.0) -> URL {
 
         let renderer = UIPrintPageRenderer()
         renderer.addPrintFormatter(printFormatter, startingAtPageAt: 0)
 
-        // A4 page rect in Double
+        // A4 page rectangle
         let paperRect = CGRect(
             x: 0,
             y: 0,
@@ -27,19 +27,23 @@ class PDFCreator {
             height: height
         )
 
-        // Add inset margins
-        let printableRect = paperRect.insetBy(dx: margin, dy: margin)
+        // Printable area: only top and bottom margins
+        let printableRect = CGRect(
+            x: 0,  // full width
+            y: verticalMargin,  // top margin
+            width: width,       // full width
+            height: height - 2 * verticalMargin  // subtract top & bottom
+        )
 
-        // Override print renderer bounds
+        // Set renderer paper & printable rects
         renderer.setValue(paperRect, forKey: "paperRect")
         renderer.setValue(printableRect, forKey: "printableRect")
 
-        // PDF buffer
+        // PDF context
         let pdfData = NSMutableData()
-
         UIGraphicsBeginPDFContextToData(pdfData, paperRect, nil)
 
-        // Draw every page with margins applied
+        // Render pages
         for pageIndex in 0 ..< renderer.numberOfPages {
             UIGraphicsBeginPDFPageWithInfo(paperRect, nil)
             renderer.drawPage(at: pageIndex, in: printableRect)
@@ -47,7 +51,7 @@ class PDFCreator {
 
         UIGraphicsEndPDFContext()
 
-        // Save PDF to file
+        // Save PDF
         let url = createdFileURL
         do {
             try pdfData.write(to: url, options: .atomic)
@@ -68,14 +72,13 @@ class PDFCreator {
             appropriateFor: nil,
             create: true
         )
-
         return directory
             .appendingPathComponent("generatedPdfFile")
             .appendingPathExtension("pdf")
     }
 
     /**
-     Regex helper (kept from original)
+     Regex helper (optional)
      */
     private class func matches(for regex: String, in text: String) -> [String] {
         do {
