@@ -91,7 +91,7 @@ class HtmlToPdfConverter {
                 .setMediaSize(mediaSize)
                 .setResolution(PrintAttributes.Resolution("pdf", "pdf", 300, 300))
                 .setMinMargins(
-                    PrintAttributes.Margins.of(
+                   PrintAttributes.Margins(
                         marginLeft.toInt(),
                         marginTop.toInt(),
                         marginRight.toInt(),
