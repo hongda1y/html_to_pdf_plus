@@ -8,31 +8,28 @@ class PDFCreator {
         - printFormatter: UIPrintFormatter from WebView/HTML
         - width: PDF width in points (A4 default)
         - height: PDF height in points (A4 default)
-        - verticalMargin: Top and bottom margin (default 20.0 pt)
+        - margins: Margins for top, left, bottom, right (default 40 pt top/bottom, 20 pt left/right)
      - Returns: URL of generated PDF
      */
-    class func create(printFormatter: UIPrintFormatter,
-                      width: Double = 595.2,   // A4 width @ 72 dpi
-                      height: Double = 841.8,  // A4 height @ 72 dpi
-                      verticalMargin: Double = 40.0) -> URL {
+    class func create(
+        printFormatter: UIPrintFormatter,
+        width: Double = 595.2,   // A4 width @ 72 dpi
+        height: Double = 841.8,  // A4 height @ 72 dpi
+        margins: UIEdgeInsets = UIEdgeInsets(top: 40, left: 20, bottom: 40, right: 20)
+    ) -> URL {
 
         let renderer = UIPrintPageRenderer()
         renderer.addPrintFormatter(printFormatter, startingAtPageAt: 0)
 
         // A4 page rectangle
-        let paperRect = CGRect(
-            x: 0,
-            y: 0,
-            width: width,
-            height: height
-        )
+        let paperRect = CGRect(x: 0, y: 0, width: width, height: height)
 
-        // Printable area: only top and bottom margins
+        // Printable area adjusted for margins
         let printableRect = CGRect(
-            x: 0,  // full width
-            y: verticalMargin,  // top margin
-            width: width,       // full width
-            height: height - 2 * verticalMargin  // subtract top & bottom
+            x: margins.left,
+            y: margins.top,
+            width: width - margins.left - margins.right,
+            height: height - margins.top - margins.bottom
         )
 
         // Set renderer paper & printable rects
@@ -62,9 +59,7 @@ class PDFCreator {
         return url
     }
 
-    /**
-     Creates a temporary PDF file URL.
-     */
+    // MARK: - Helper: Temporary PDF URL
     private class var createdFileURL: URL {
         let directory = try! FileManager.default.url(
             for: .documentDirectory,
@@ -75,20 +70,5 @@ class PDFCreator {
         return directory
             .appendingPathComponent("generatedPdfFile")
             .appendingPathExtension("pdf")
-    }
-
-    /**
-     Regex helper (optional)
-     */
-    private class func matches(for regex: String, in text: String) -> [String] {
-        do {
-            let reg = try NSRegularExpression(pattern: regex)
-            let ns = text as NSString
-            let results = reg.matches(in: text, range: NSRange(location: 0, length: ns.length))
-            return results.map { ns.substring(with: $0.range) }
-        } catch {
-            print("invalid regex: \(error.localizedDescription)")
-            return []
-        }
     }
 }
