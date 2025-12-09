@@ -2,45 +2,47 @@ import UIKit
 
 class PDFCreator {
 
+    
     /**
      Creates a PDF using the given print formatter and saves it to the user's document directory.
      - Parameters:
         - printFormatter: UIPrintFormatter from WebView/HTML
         - width: PDF width in points (A4 default)
         - height: PDF height in points (A4 default)
-        - margins: Margins for top, left, bottom, right (default 40 pt top/bottom, 20 pt left/right)
+        - margins: Margins for top, left, bottom, right (can be zero)
      - Returns: URL of generated PDF
      */
     class func create(
         printFormatter: UIPrintFormatter,
-        width: Double = 595.2,   // A4 width @ 72 dpi
-        height: Double = 841.8,  // A4 height @ 72 dpi
+        width: Double = 595.2,
+        height: Double = 841.8,
         margins: UIEdgeInsets = UIEdgeInsets(top: 40, left: 20, bottom: 40, right: 20)
     ) -> URL {
 
         let renderer = UIPrintPageRenderer()
         renderer.addPrintFormatter(printFormatter, startingAtPageAt: 0)
 
-        // A4 page rectangle
         let paperRect = CGRect(x: 0, y: 0, width: width, height: height)
 
-        // Printable area adjusted for margins
+        // Ensure printable width/height are at least 1 point to avoid blank PDF
+        let printableWidth = max(1, width - margins.left - margins.right)
+        let printableHeight = max(1, height - margins.top - margins.bottom)
+
         let printableRect = CGRect(
             x: margins.left,
             y: margins.top,
-            width: width - margins.left - margins.right,
-            height: height - margins.top - margins.bottom
+            width: printableWidth,
+            height: printableHeight
         )
 
-        // Set renderer paper & printable rects
+        // Use KVC to set the paper & printable rects
         renderer.setValue(paperRect, forKey: "paperRect")
         renderer.setValue(printableRect, forKey: "printableRect")
 
-        // PDF context
+        // Begin PDF context
         let pdfData = NSMutableData()
         UIGraphicsBeginPDFContextToData(pdfData, paperRect, nil)
 
-        // Render pages
         for pageIndex in 0 ..< renderer.numberOfPages {
             UIGraphicsBeginPDFPageWithInfo(paperRect, nil)
             renderer.drawPage(at: pageIndex, in: printableRect)
@@ -57,6 +59,17 @@ class PDFCreator {
         }
 
         return url
+    }
+
+    // Temporary file URL
+    private class var createdFileURL: URL {
+        let directory = try! FileManager.default.url(
+            for: .documentDirectory,
+            in: .userDomainMask,
+            appropriateFor: nil,
+            create: true
+        )
+        return directory.appendingPathComponent("generatedPdfFile").appendingPathExtension("pdf")
     }
 
     // MARK: - Helper: Temporary PDF URL
