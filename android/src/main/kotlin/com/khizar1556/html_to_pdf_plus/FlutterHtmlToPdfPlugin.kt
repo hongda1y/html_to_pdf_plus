@@ -51,11 +51,11 @@ class FlutterHtmlToPdfPlugin: FlutterPlugin, MethodCallHandler {
             marginBottom,
             marginRight,
             object : HtmlToPdfConverter.Callback {
-                fun onSuccess(filePath: String) {
+                override fun onSuccess(filePath: String) {
                     result.success(filePath)
                 }
 
-                fun onFailure() {
+                override fun onFailure() {
                     result.error("ERROR", "Unable to convert html to pdf document!", "")
                 }
             }
