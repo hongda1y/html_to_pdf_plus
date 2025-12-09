@@ -12,56 +12,55 @@ class PdfPrinter(private val printAttributes: PrintAttributes) {
         fun onFailure()
     }
 
-
     fun print(
         printAdapter: PrintDocumentAdapter,
         path: File,
         fileName: String,
         callback: Callback
     ) {
-        // Support for min API 16 is required
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             printAdapter.onLayout(
                 null,
                 printAttributes,
                 null,
                 object : PrintDocumentAdapter.LayoutResultCallback() {
-
                     override fun onLayoutFinished(info: PrintDocumentInfo, changed: Boolean) {
-                        printAdapter.onWrite(arrayOf(PageRange.ALL_PAGES),
+                        printAdapter.onWrite(
+                            arrayOf(android.print.PageRange.ALL_PAGES),
                             getOutputFile(path, fileName),
                             CancellationSignal(),
                             object : PrintDocumentAdapter.WriteResultCallback() {
-
-                                override fun onWriteFinished(pages: Array<PageRange>) {
+                                override fun onWriteFinished(pages: Array<android.print.PageRange>) {
                                     super.onWriteFinished(pages)
 
-                                    if (pages.isEmpty()) {
+                                    val outputFile = File(path, fileName)
+                                    if (!outputFile.exists() || pages.isEmpty()) {
                                         callback.onFailure()
+                                        return
                                     }
 
-                                    File(path, fileName).let {
-                                        callback.onSuccess(it.absolutePath)
-                                    }
-
+                                    callback.onSuccess(outputFile.absolutePath)
                                 }
-                            })
+                            }
+                        )
                     }
                 },
                 null
             )
+        } else {
+            // API < 19 not supported
+            callback.onFailure()
         }
     }
-}
 
-
-private fun getOutputFile(path: File, fileName: String): ParcelFileDescriptor {
-    if (!path.exists()) {
-        path.mkdirs()
-    }
-
-    File(path, fileName).let {
-        it.createNewFile()
-        return ParcelFileDescriptor.open(it, ParcelFileDescriptor.MODE_READ_WRITE)
+    private fun getOutputFile(path: File, fileName: String): ParcelFileDescriptor {
+        if (!path.exists()) {
+            path.mkdirs()
+        }
+        val file = File(path, fileName)
+        if (!file.exists()) {
+            file.createNewFile()
+        }
+        return ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_WRITE)
     }
 }
