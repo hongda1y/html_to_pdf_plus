@@ -7,6 +7,8 @@ import android.print.PrintAttributes
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import java.io.File
+import android.print.PdfPrinter
+
 
 class HtmlToPdfConverter {
 
