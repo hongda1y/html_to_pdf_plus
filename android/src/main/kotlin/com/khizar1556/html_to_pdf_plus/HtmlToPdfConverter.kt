@@ -105,12 +105,12 @@ class HtmlToPdfConverter {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 val adapter = webView.createPrintDocumentAdapter(temporaryDocumentName)
                 printer.print(adapter, path, temporaryFileName, object : PdfPrinter.Callback {
-                    fun onSuccess(filePath: String) {
+                    override fun onSuccess(filePath: String) {
                         callback.onSuccess(filePath)
                         webView.destroy() // dispose webview
                     }
 
-                    fun onFailure() {
+                    override fun onFailure() {
                         callback.onFailure()
                         webView.destroy() // dispose webview
                     }
