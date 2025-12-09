@@ -13,7 +13,7 @@ class PdfPrinter(private val printAttributes: PrintAttributes) {
     }
 
     fun print(
-        printAdapter: PrintDocumentAdapter,
+        printAdapter: android.print.PrintDocumentAdapter,
         path: File,
         fileName: String,
         callback: Callback
@@ -23,32 +23,28 @@ class PdfPrinter(private val printAttributes: PrintAttributes) {
                 null,
                 printAttributes,
                 null,
-                object : PrintDocumentAdapter.LayoutResultCallback() {
-                    override fun onLayoutFinished(info: PrintDocumentInfo, changed: Boolean) {
+                object : android.print.PrintDocumentAdapter.LayoutResultCallback() {
+                    override fun onLayoutFinished(info: android.print.PrintDocumentInfo, changed: Boolean) {
                         printAdapter.onWrite(
                             arrayOf(android.print.PageRange.ALL_PAGES),
                             getOutputFile(path, fileName),
                             CancellationSignal(),
-                            object : PrintDocumentAdapter.WriteResultCallback() {
+                            object : android.print.PrintDocumentAdapter.WriteResultCallback() {
                                 override fun onWriteFinished(pages: Array<android.print.PageRange>) {
                                     super.onWriteFinished(pages)
-
                                     val outputFile = File(path, fileName)
                                     if (!outputFile.exists() || pages.isEmpty()) {
                                         callback.onFailure()
                                         return
                                     }
-
                                     callback.onSuccess(outputFile.absolutePath)
                                 }
-                            }
-                        )
+                            })
                     }
                 },
                 null
             )
         } else {
-            // API < 19 not supported
             callback.onFailure()
         }
     }
