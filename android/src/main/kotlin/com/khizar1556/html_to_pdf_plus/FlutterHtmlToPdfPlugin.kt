@@ -36,7 +36,6 @@ class FlutterHtmlToPdfPlugin: FlutterPlugin, MethodCallHandler {
         val printSize = call.argument<String>("printSize") ?: "A4"
         val orientation = call.argument<String>("orientation") ?: "PORTRAIT"
 
-        // Retrieve margins, with defaults if not provided
         val marginTop = call.argument<Double>("marginTop") ?: 40.0
         val marginLeft = call.argument<Double>("marginLeft") ?: 20.0
         val marginBottom = call.argument<Double>("marginBottom") ?: 40.0
@@ -52,7 +51,6 @@ class FlutterHtmlToPdfPlugin: FlutterPlugin, MethodCallHandler {
             marginBottom,
             marginRight,
             object : HtmlToPdfConverter.Callback {
-                // Remove 'override' here
                 fun onSuccess(filePath: String) {
                     result.success(filePath)
                 }
