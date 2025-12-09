@@ -61,16 +61,6 @@ class PDFCreator {
         return url
     }
 
-    // Temporary file URL
-    private class var createdFileURL: URL {
-        let directory = try! FileManager.default.url(
-            for: .documentDirectory,
-            in: .userDomainMask,
-            appropriateFor: nil,
-            create: true
-        )
-        return directory.appendingPathComponent("generatedPdfFile").appendingPathExtension("pdf")
-    }
 
     // MARK: - Helper: Temporary PDF URL
     private class var createdFileURL: URL {
